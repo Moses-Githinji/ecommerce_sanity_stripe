@@ -1,0 +1,4 @@
+shipping_options: [
+    { shipping_rate: 'shr_1KvUejKEL1TeWzl4UjKVjg1s' },
+    { shipping_rate: 'shr_1KvUgKKEL1TeWzl4tysMZKPt' },
+],

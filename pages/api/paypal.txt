@@ -1,0 +1,59 @@
+import React, { useState } from 'react';
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+
+
+const Checkout = ({ props }) => {
+    const { name, price } = props;
+
+    const [show, setShow] = useState(false);
+    const [success, setSuccess] = useState(false);
+    const [ErrorMessage, setErrorMessage] = useState("");
+    const [orderID, setOrderID] = useState(false);
+
+    // create an order
+    const createOrder = (data, actions) => {
+        return actions.order
+            .create({
+                purchase_units: [{
+                    descriprion: name,
+                    amount: {
+                        currency_code: 'USD',
+                        value: price,
+                    },
+                },
+            ],
+            // you don't need this if the shipping address is mandatory
+            application_context: {
+                shipping_preference: 'NO SHIPPING',
+            },
+            })
+            .then((orderID) => {
+                setOrderID(orderID);
+                return orderID
+            });
+    };
+
+    // check approval
+    const onApprove =(data, actions) => {
+        return actions.order.capture().then(function (details) {
+            const { payer } = details;
+            setSuccess(true);
+        }) ;
+    };
+
+    //capture likely error
+    const onError = (data, actions) => {
+        setPaypalErroMessage('Aan error occured with your payment');
+    };
+
+  return (
+    <PayPalScriptProvider
+        options={{'client_id': process.env.NEXT_PAYPAL_CLIENT_ID}}
+    ></PayPalScriptProvider>
+  )
+}
+
+export default Checkout
+
+
+
